@@ -7,3 +7,5 @@ commands:
    giveitems:
       description: Gives the items
       usage: /giveitems
+
+depend: [ ProtocolLib ]

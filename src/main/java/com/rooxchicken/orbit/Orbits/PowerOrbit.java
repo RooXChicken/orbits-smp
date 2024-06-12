@@ -59,7 +59,7 @@ public class PowerOrbit extends BaseOrbit
 
         //Bukkit.getLogger().info(item.getItemMeta().getDisplayName());
 
-        if(checkItem(item) && checkCooldown(player, cooldown1Key, cooldown1Max))
+        if(checkItem(item))// && checkCooldown(player, cooldown1Key, cooldown1Max))
         {
             player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 200, 2));
             Orbit.tasks.add(new PowerOrbit_Cookout(plugin, player.getLocation(), player));

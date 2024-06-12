@@ -33,13 +33,14 @@ import com.comphenix.protocol.wrappers.WrappedDataWatcher.Registry;
 import com.rooxchicken.orbit.Orbit;
 import com.rooxchicken.orbit.Tasks.AstroOrbit_Evaporation;
 import com.rooxchicken.orbit.Tasks.PowerOrbit_Cookout;
+import com.rooxchicken.orbit.Tasks.VoidOrbit_Freeze;
 
 import net.minecraft.network.protocol.game.PacketPlayOutEntityEquipment;
 import net.minecraft.world.entity.EnumItemSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.level.IMaterial;
 
-public class AstroOrbit extends BaseOrbit
+public class VoidOrbit extends BaseOrbit
 {
     public NamespacedKey cooldown1Key;
     public NamespacedKey cooldown2Key;
@@ -49,15 +50,15 @@ public class AstroOrbit extends BaseOrbit
     
     private Orbit plugin;
 
-    public AstroOrbit(Orbit _plugin)
+    public VoidOrbit(Orbit _plugin)
     {
         super(_plugin);
         plugin = _plugin;
 
         itemName = "§7§lAstro Orbit";
 
-        cooldown1Key = new NamespacedKey(plugin, "astro_cd1");
-        cooldown2Key = new NamespacedKey(plugin, "astro_cd2");
+        cooldown1Key = new NamespacedKey(plugin, "void_cd1");
+        cooldown2Key = new NamespacedKey(plugin, "void_cd2");
     }
 
     @Override
@@ -66,21 +67,8 @@ public class AstroOrbit extends BaseOrbit
 
     }
 
-    // @Override
-    // public void tick()
-    // {
-    //     for(Player player : Bukkit.getOnlinePlayers())
-    //     {
-    //         ItemStack item = player.getInventory().getItemInOffHand();
-    //         if(checkItem(item))
-    //         {
-    //             player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 21, 0));
-    //         }
-    //     }
-    // }
-
     @EventHandler
-    private void useTrueInvisibility(PlayerInteractEvent event)
+    private void freezePlayers(PlayerInteractEvent event)
     {
         if(event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK)
             return;
@@ -90,7 +78,26 @@ public class AstroOrbit extends BaseOrbit
 
         if(checkItem(item))// && checkCooldown(player, cooldown1Key, cooldown1Max))
         {
-            Orbit.tasks.add(new AstroOrbit_Evaporation(plugin, player));
+            Orbit.tasks.add(new VoidOrbit_Freeze(plugin, player));
+        }
+    }
+
+    @EventHandler
+    private void useVoidStorm(PlayerSwapHandItemsEvent event)
+    {
+        Player player = event.getPlayer();
+        ItemStack item = event.getMainHandItem();
+
+        if(!player.isSneaking())
+            return;
+
+        //Bukkit.getLogger().info(item.getItemMeta().getDisplayName());
+
+        if(checkItem(item))// && checkCooldown(player, cooldown1Key, cooldown1Max))
+        {
+            
+
+            event.setCancelled(true);
         }
     }
 }

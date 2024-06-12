@@ -31,8 +31,11 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.RayTraceResult;
+
+import com.comphenix.protocol.ProtocolLibrary;
 import com.google.common.base.Predicate;
 import com.rooxchicken.orbit.Commands.GiveItems;
+import com.rooxchicken.orbit.Orbits.AstroOrbit;
 import com.rooxchicken.orbit.Orbits.BaseOrbit;
 import com.rooxchicken.orbit.Orbits.PowerOrbit;
 import com.rooxchicken.orbit.Tasks.Task;
@@ -47,10 +50,13 @@ public class Orbit extends JavaPlugin implements Listener
     @Override
     public void onEnable()
     {
+        ProtocolLibrary.getProtocolManager().removePacketListeners(this);
         tasks = new ArrayList<Task>();
 
         orbits = new ArrayList<BaseOrbit>();
         orbits.add(new PowerOrbit(this));
+        orbits.add(new AstroOrbit(this));
+        
         getServer().getPluginManager().registerEvents(this, this);
         
         this.getCommand("giveitems").setExecutor(new GiveItems(this));
