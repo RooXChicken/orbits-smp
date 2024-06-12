@@ -57,7 +57,7 @@ public class SolarOrbit extends BaseOrbit
         super(_plugin);
         plugin = _plugin;
 
-        itemName = "§7§lAstro Orbit";
+        itemName = "§e§lSolar Orbit";
 
         cooldown1Key = new NamespacedKey(plugin, "void_cd1");
         cooldown2Key = new NamespacedKey(plugin, "void_cd2");
@@ -95,7 +95,7 @@ public class SolarOrbit extends BaseOrbit
         if(!player.isSneaking())
             return;
 
-        //Bukkit.getLogger().info(item.getItemMeta().getDisplayName());
+        Bukkit.getLogger().info(item.getItemMeta().getDisplayName());
 
         if(checkItem(item))// && checkCooldown(player, cooldown1Key, cooldown1Max))
         {

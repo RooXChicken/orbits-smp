@@ -38,6 +38,8 @@ import com.rooxchicken.orbit.Commands.GiveItems;
 import com.rooxchicken.orbit.Orbits.AstroOrbit;
 import com.rooxchicken.orbit.Orbits.BaseOrbit;
 import com.rooxchicken.orbit.Orbits.PowerOrbit;
+import com.rooxchicken.orbit.Orbits.SolarOrbit;
+import com.rooxchicken.orbit.Orbits.VoidOrbit;
 import com.rooxchicken.orbit.Tasks.Task;
 
 public class Orbit extends JavaPlugin implements Listener
@@ -56,6 +58,8 @@ public class Orbit extends JavaPlugin implements Listener
         orbits = new ArrayList<BaseOrbit>();
         orbits.add(new PowerOrbit(this));
         orbits.add(new AstroOrbit(this));
+        orbits.add(new SolarOrbit(this));
+        orbits.add(new VoidOrbit(this));
         
         getServer().getPluginManager().registerEvents(this, this);
         

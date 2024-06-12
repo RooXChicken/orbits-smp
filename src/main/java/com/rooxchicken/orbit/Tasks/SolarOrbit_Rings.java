@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -17,12 +18,14 @@ public class SolarOrbit_Rings extends Task
 {
     private Player player;
     private Location start;
-    private Sphere sphere;
 
-    private double size = 0.4;
-    private int count = 25;
+    private double size = 1.5;
+    private int count = 90;
 
     private int t = 0;
+    
+    private double[] cacheX;
+    private double[] cacheZ;
 
     private HashMap<Player, Location> freezeMap;
 
@@ -34,26 +37,27 @@ public class SolarOrbit_Rings extends Task
         player = _player;
         freezeMap = new HashMap<Player, Location>();
         
-        sphere = new Sphere(new Color[] {Color.PURPLE}, count);
+        cacheX = new double[count];
+        cacheZ = new double[count];
+
+        for(int i = 0; i < count; i++)
+        {
+            double rad = Math.toRadians(i * (360.0/count));
+            cacheX[i] = Math.sin(rad);
+            cacheZ[i] = Math.cos(rad);
+        }
     }
 
     @Override
     public void run()
     {
-        for(Object o : Orbit.getNearbyEntities(start, 8))
+        for(int i = 0; i < count; i++)
         {
-            if(o instanceof Player && o != player)
-            {
-                Player p = (Player)o;
-                if(!freezeMap.containsKey(p))
-                    freezeMap.put(p, p.getLocation().clone());
-                
-                p.teleport(freezeMap.get(p));
-            }
+            double xOffset = cacheX[i] * size;
+            double zOffset = cacheZ[i] * size;
+            player.getWorld().spawnParticle(Particle.REDSTONE, player.getLocation().clone().add(xOffset, 1, zOffset), 1, 0, 0, 0, new Particle.DustOptions(Color.GRAY, 1f));
         }
-        
-        sphere.run(start, 8, count, 1, 0.4);
-
+    
         if(++t > 100)
             cancel = true;
     }
