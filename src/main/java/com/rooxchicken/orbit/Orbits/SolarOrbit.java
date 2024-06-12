@@ -95,7 +95,7 @@ public class SolarOrbit extends BaseOrbit
         if(!player.isSneaking())
             return;
 
-        Bukkit.getLogger().info(item.getItemMeta().getDisplayName());
+        //Bukkit.getLogger().info(item.getItemMeta().getDisplayName());
 
         if(checkItem(item))// && checkCooldown(player, cooldown1Key, cooldown1Max))
         {

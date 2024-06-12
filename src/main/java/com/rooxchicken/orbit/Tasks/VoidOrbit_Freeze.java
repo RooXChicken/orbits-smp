@@ -11,12 +11,9 @@ import org.bukkit.potion.PotionEffectType;
 import com.rooxchicken.orbit.Orbit;
 import com.rooxchicken.orbit.Common.Sphere;
 
-import net.minecraft.world.entity.animal.EntityBee.f;
-
 public class VoidOrbit_Freeze extends Task
 {
     private Player player;
-    private Location start;
     private Sphere sphere;
 
     private double size = 0.4;
@@ -40,7 +37,7 @@ public class VoidOrbit_Freeze extends Task
     @Override
     public void run()
     {
-        for(Object o : Orbit.getNearbyEntities(start, 8))
+        for(Object o : Orbit.getNearbyEntities(player.getLocation(), 8))
         {
             if(o instanceof Player && o != player)
             {
@@ -52,7 +49,7 @@ public class VoidOrbit_Freeze extends Task
             }
         }
         
-        sphere.run(start, 8, count, 1, 0.4);
+        //sphere.run(start, 8, count, 1, 0.4);
 
         if(++t > 100)
             cancel = true;
