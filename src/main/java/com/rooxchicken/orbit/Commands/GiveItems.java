@@ -26,7 +26,7 @@ public class GiveItems implements CommandExecutor
         if(sender.isOp())
         {
             Player player = Bukkit.getPlayer(sender.getName());
-            
+            Bukkit.dispatchCommand(sender, "give @s red_dye{display:{Name:'{\"text\":\"Power Orbit\",\"color\":\"red\",\"bold\":true}'}} 1");
         }
 
         return true;
