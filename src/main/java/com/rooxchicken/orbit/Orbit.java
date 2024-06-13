@@ -39,6 +39,7 @@ import com.rooxchicken.orbit.Commands.ResetCooldown;
 import com.rooxchicken.orbit.Commands.SetOrbit;
 import com.rooxchicken.orbit.Orbits.AstroOrbit;
 import com.rooxchicken.orbit.Orbits.BaseOrbit;
+import com.rooxchicken.orbit.Orbits.MoneyOrbit;
 import com.rooxchicken.orbit.Orbits.PowerOrbit;
 import com.rooxchicken.orbit.Orbits.SolarOrbit;
 import com.rooxchicken.orbit.Orbits.VoidOrbit;
@@ -136,7 +137,7 @@ public class Orbit extends JavaPlugin implements Listener
             case 1: return new AstroOrbit(this, player);
             case 2: return new VoidOrbit(this, player);
             case 3: return new SolarOrbit(this, player);
-            //case 4: return new (this);
+            case 4: return new MoneyOrbit(this, player);
         }
 
         return null;

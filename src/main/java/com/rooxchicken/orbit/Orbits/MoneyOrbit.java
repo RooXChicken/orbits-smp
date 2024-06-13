@@ -33,44 +33,37 @@ import com.comphenix.protocol.wrappers.Pair;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher.Registry;
 import com.rooxchicken.orbit.Orbit;
 import com.rooxchicken.orbit.Tasks.AstroOrbit_Evaporation;
+import com.rooxchicken.orbit.Tasks.MoneyOrbit_Cheap;
 import com.rooxchicken.orbit.Tasks.PowerOrbit_Cookout;
-import com.rooxchicken.orbit.Tasks.VoidOrbit_Freeze;
-import com.rooxchicken.orbit.Tasks.VoidOrbit_Storm;
 
 import net.minecraft.network.protocol.game.PacketPlayOutEntityEquipment;
 import net.minecraft.world.entity.EnumItemSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.level.IMaterial;
 
-public class VoidOrbit extends BaseOrbit
+public class MoneyOrbit extends BaseOrbit
 {
     private Orbit plugin;
     private Player player;
-
-    //public NamespacedKey cooldown1Key;
-    //public NamespacedKey cooldown2Key;
-
-    // public int cooldown1Max;
-    // public int cooldown2Max;
-
-    public VoidOrbit(Orbit _plugin, Player _player)
+    
+    public MoneyOrbit(Orbit _plugin, Player _player)
     {
         super(_plugin);
         plugin = _plugin;
         player = _player;
 
-        itemName = "§0§lVoid Orbit";
+        itemName = "§7§lAstro Orbit";
 
-        item = new ItemStack(Material.BLACK_DYE);
+        item = new ItemStack(Material.GREEN_DYE);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(itemName);
         item.setItemMeta(meta);
 
-        cooldown1Max = 300 * 20;
+        cooldown1Max = 350 * 20;
         cooldown2Max = 500 * 20;
 
-        cooldown1Key = new NamespacedKey(plugin, "void_cd1");
-        cooldown2Key = new NamespacedKey(plugin, "void_cd2");
+        cooldown1Key = new NamespacedKey(plugin, "money_cd1");
+        cooldown2Key = new NamespacedKey(plugin, "money_cd2");
 
         checkHasCooldown(player, cooldown1Key, cooldown2Key);
     }
@@ -78,11 +71,18 @@ public class VoidOrbit extends BaseOrbit
     @Override
     public void tick()
     {
-
+        if(!checkOrbit(player, 4))
+            return;
+            
+        ItemStack item = player.getInventory().getItemInOffHand();
+        if(checkItem(item))
+        {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE, 21, 0));
+        }
     }
 
     @EventHandler
-    private void freezePlayers(PlayerInteractEvent event)
+    private void useCheapVillagers(PlayerInteractEvent event)
     {
         if(event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK)
             return;
@@ -90,38 +90,16 @@ public class VoidOrbit extends BaseOrbit
         if(player != event.getPlayer())
             return;
 
-        if(!checkOrbit(player, 2))
+        if(!checkOrbit(player, 4))
             return;
-
+        
         ItemStack item = event.getItem();
 
-        if(checkItem(item))// && checkCooldown(player, cooldown1Key, cooldown1Max))
+        if(checkItem(item) && checkCooldown(player, cooldown1Key, cooldown1Max))
         {
-            Orbit.tasks.add(new VoidOrbit_Freeze(plugin, player));
-        }
-    }
-
-    @EventHandler
-    private void useVoidStorm(PlayerSwapHandItemsEvent event)
-    {
-        if(event.getPlayer() != player)
-            return;
-
-        if(!checkOrbit(player, 2))
-            return;
-            
-        ItemStack item = event.getMainHandItem();
-
-        if(!player.isSneaking())
-            return;
-
-        //Bukkit.getLogger().info(item.getItemMeta().getDisplayName());
-
-        if(checkItem(item))// && checkCooldown(player, cooldown1Key, cooldown1Max))
-        {
-            Orbit.tasks.add(new VoidOrbit_Storm(plugin, player));
-
-            event.setCancelled(true);
+            MoneyOrbit_Cheap cheap = new MoneyOrbit_Cheap(plugin, player);
+            Bukkit.getPluginManager().registerEvents(cheap, plugin);
+            Orbit.tasks.add(cheap);
         }
     }
 }

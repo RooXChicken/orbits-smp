@@ -36,7 +36,7 @@ public class DisplayCooldown extends Task
             int cooldown1 = data.get(orbit.cooldown1Key, PersistentDataType.INTEGER) - 1;
             if(cooldown1 >= 0)
             data.set(orbit.cooldown1Key, PersistentDataType.INTEGER, cooldown1);
-            if(cooldown1 == 0)
+            if(cooldown1 < 1)
                 msg += "READY";
             else
                 msg += cooldown1/20 + "/" + orbit.cooldown1Max/20 + "s";
@@ -46,7 +46,7 @@ public class DisplayCooldown extends Task
                 int cooldown2 = data.get(orbit.cooldown2Key, PersistentDataType.INTEGER) - 1;
                 if(cooldown2 >= 0)
                     data.set(orbit.cooldown2Key, PersistentDataType.INTEGER, cooldown2);
-                if(cooldown2 == 0)
+                if(cooldown2 < 1)
                     msg += " | READY";
                 else
                     msg += " | " + cooldown2/20 + "/" + orbit.cooldown2Max/20 + "s";

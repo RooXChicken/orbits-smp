@@ -93,8 +93,6 @@ public class SolarOrbit extends BaseOrbit
         }
         else
             state = 0;
-
-        //Bukkit.getLogger().info("" + state);
     }
 
     @EventHandler
