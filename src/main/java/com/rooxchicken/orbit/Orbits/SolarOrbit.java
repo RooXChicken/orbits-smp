@@ -9,10 +9,14 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
@@ -54,6 +58,8 @@ public class SolarOrbit extends BaseOrbit
     public int cooldown1Max = 200 * 20;
     public int cooldown2Max = 250 * 20;
 
+    private int state = 0;
+
     public SolarOrbit(Orbit _plugin, Player _player)
     {
         super(_plugin);
@@ -74,7 +80,10 @@ public class SolarOrbit extends BaseOrbit
     @Override
     public void tick()
     {
+        if(state != 0 && player.isOnGround())
+            state = 0;
 
+        //Bukkit.getLogger().info("" + player.getVelocity().getY());
     }
 
     @EventHandler
@@ -91,11 +100,35 @@ public class SolarOrbit extends BaseOrbit
 
         ItemStack item = event.getItem();
 
-        if(checkItem(item))// && checkCooldown(player, cooldown1Key, cooldown1Max))
+        if(checkItem(item))
         {
-            Vector direction = player.getLocation().getDirection();
-            direction.setY(Math.abs(direction.getY()));
-            player.setVelocity(direction.multiply(2));
+            switch(state)
+            {
+                case 0:
+                    if(checkCooldown(player, cooldown1Key, cooldown1Max))
+                    {
+                        Vector direction = player.getLocation().getDirection();
+                        direction.setY(Math.abs(direction.getY()));
+                        player.setVelocity(direction.multiply(2));
+                        state = 1;
+                    }
+                    else
+                    {
+                        state = 1;
+                        useCosmicThrow(event);
+                    }
+                break;
+
+                case 1:
+                    Fireball fireball = (Fireball)player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREBALL);
+                    double yaw = Math.toRadians(player.getLocation().getYaw() + 90);
+                    //fireball.setVelocity(new Vector(Math.cos(yaw), Math.sin(player.getLocation().getPitch()), Math.sin(yaw)));
+                    fireball.setRotation(player.getLocation().getYaw(), player.getLocation().getPitch());
+                    fireball.teleport(fireball.getLocation().clone().add(new Vector(Math.cos(yaw), Math.sin(Math.toRadians(player.getLocation().getPitch()))*-1, Math.sin(yaw)).multiply(2)));
+                    fireball.setYield(3);
+                    state = 2;
+                break;
+            }
         }
     }
 
@@ -119,6 +152,18 @@ public class SolarOrbit extends BaseOrbit
         {
             Orbit.tasks.add(new SolarOrbit_Rings(plugin, player));
 
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void cancelFall(EntityDamageEvent event)
+    {
+        if(event.getCause() != DamageCause.FALL || event.getEntityType() != EntityType.PLAYER)
+            return;
+
+        if(state != 0)
+        {
             event.setCancelled(true);
         }
     }

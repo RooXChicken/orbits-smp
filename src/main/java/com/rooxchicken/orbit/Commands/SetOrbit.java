@@ -26,7 +26,8 @@ public class SetOrbit implements CommandExecutor
         if(sender.isOp())
         {
             Player player = Bukkit.getPlayer(sender.getName());
-            plugin.setOrbit(player, Integer.parseInt(args[0]));
+            int orbit = Integer.parseInt(args[0]);
+            plugin.setOrbit(player, orbit);
         }
 
         return true;

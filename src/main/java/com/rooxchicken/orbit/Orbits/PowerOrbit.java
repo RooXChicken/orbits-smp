@@ -26,6 +26,7 @@ public class PowerOrbit extends BaseOrbit
 
     public NamespacedKey cooldown1Key;
     public int cooldown1Max = 500 * 20;
+    public int cooldown2Max = -1;
     //public NamespacedKey cooldown2Key;
 
     public PowerOrbit(Orbit _plugin, Player _player)

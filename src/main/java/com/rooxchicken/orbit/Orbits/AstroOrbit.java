@@ -78,7 +78,7 @@ public class AstroOrbit extends BaseOrbit
         if(player != event.getPlayer())
             return;
 
-        if(!checkOrbit(player, 2))
+        if(!checkOrbit(player, 1))
             return;
         
         ItemStack item = event.getItem();

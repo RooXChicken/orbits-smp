@@ -57,7 +57,9 @@ public class SolarOrbit_Rings extends Task
         {
             double xOffset = cacheX[i] * size;
             double zOffset = cacheZ[i] * size;
-            player.getWorld().spawnParticle(Particle.REDSTONE, player.getLocation().clone().add(xOffset, 1, zOffset), 1, 0, 0, 0, new Particle.DustOptions(Color.GRAY, 1f));
+            player.getWorld().spawnParticle(Particle.REDSTONE, player.getLocation().clone().add(xOffset, 0.6, zOffset), 1, 0, 0, 0, new Particle.DustOptions(Color.GRAY, 1f));
+            player.getWorld().spawnParticle(Particle.REDSTONE, player.getLocation().clone().add(xOffset*0.9, 0.6, zOffset*0.9), 1, 0, 0, 0, new Particle.DustOptions(Color.SILVER, 1f));
+            player.getWorld().spawnParticle(Particle.REDSTONE, player.getLocation().clone().add(xOffset*0.8, 0.6, zOffset*0.8), 1, 0, 0, 0, new Particle.DustOptions(Color.ORANGE, 1f));
         }
     
         if(++t > 100)

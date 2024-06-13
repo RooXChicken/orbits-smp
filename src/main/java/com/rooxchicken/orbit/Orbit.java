@@ -143,7 +143,11 @@ public class Orbit extends JavaPlugin implements Listener
     public void setOrbit(Player player, int orbit)
     {
         playerOrbitMap.remove(player);
-        player.getPersistentDataContainer().set(orbitKey, PersistentDataType.INTEGER, orbit);
+        if(orbit != -1)
+            player.getPersistentDataContainer().set(orbitKey, PersistentDataType.INTEGER, orbit);
+        else
+            player.getPersistentDataContainer().remove(orbitKey);
+
         addToList(player);
     }
 
