@@ -52,7 +52,7 @@ public class MoneyOrbit extends BaseOrbit
         plugin = _plugin;
         player = _player;
 
-        itemName = "§7§lAstro Orbit";
+        itemName = "§a§lMoney Orbit";
 
         item = new ItemStack(Material.GREEN_DYE);
         ItemMeta meta = item.getItemMeta();
@@ -101,5 +101,60 @@ public class MoneyOrbit extends BaseOrbit
             Bukkit.getPluginManager().registerEvents(cheap, plugin);
             Orbit.tasks.add(cheap);
         }
+    }
+
+    @EventHandler
+    private void useCopy(PlayerSwapHandItemsEvent event)
+    {
+        if(event.getPlayer() != player)
+            return;
+
+        if(!checkOrbit(player, 4))
+            return;
+            
+        ItemStack item = event.getMainHandItem();
+
+        if(!player.isSneaking())
+            return;
+
+        //Bukkit.getLogger().info(item.getItemMeta().getDisplayName());
+
+        if(checkItem(item) && checkCooldown(player, cooldown2Key, cooldown2Max))
+        {
+            activateAbility2();
+
+            event.setCancelled(true);
+        }
+    }
+
+    public void activateAbility2()
+    {
+        int steal = (int)(Math.random() * 4);
+        int ability = (int)(Math.random() * 2);
+
+        if(steal == 0)
+            PowerOrbit.activateAbility1(player, plugin);
+
+        if(steal == 1)
+        {
+            if(ability == 0)
+                AstroOrbit.activateAbility1(player, plugin);
+            if(ability == 1)
+                AstroOrbit.activateAbility1(player, plugin); //make two when done
+        }
+
+        if(steal == 2)
+        {
+            if(ability == 0)
+                VoidOrbit.activateAbility1(player, plugin);
+            if(ability == 1)
+                VoidOrbit.activateAbility2(player, plugin); //make two when done
+        }
+
+        if(steal == 3)
+        {
+            SolarOrbit.activateAbility2(player, plugin);
+        }
+        
     }
 }

@@ -72,11 +72,16 @@ public class VoidOrbit_Storm extends Task implements Listener
                     ((Player)o).damage(15, player);
             }
         }
+
+        double blockY = Orbit.getBlock(player, 40, 90).getLocation().getY() + 1.1;
+        start = player.getEyeLocation().clone();
+        start.setY(blockY);
+
         for(int i = 0; i < count; i++)
         {
             double xOffset = cacheX[i] * size;
             double zOffset = cacheZ[i] * size;
-            player.getWorld().spawnParticle(Particle.REDSTONE, player.getLocation().clone().add(xOffset, 0.3, zOffset), 8, 4, 0.2, 4, new Particle.DustOptions(Color.BLACK, 1f));
+            player.getWorld().spawnParticle(Particle.REDSTONE, start.clone().add(xOffset, 0.3, zOffset), 8, 4, 0.2, 4, new Particle.DustOptions(Color.BLACK, 1f));
         }
     
         if(++t > 56)

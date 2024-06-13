@@ -2,6 +2,7 @@ package com.rooxchicken.orbit.Tasks;
 
 import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -29,6 +30,7 @@ public class PowerOrbit_Cookout extends Task
         player = _player;
         
         sphere = new Sphere(new Color[] {Color.RED}, count);
+        player.getWorld().playSound(player.getLocation(), Sound.ENTITY_WARDEN_ATTACK_IMPACT, 1, 1f);
     }
 
     @Override

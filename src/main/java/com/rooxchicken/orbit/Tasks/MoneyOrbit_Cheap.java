@@ -70,7 +70,7 @@ public class MoneyOrbit_Cheap extends Task implements Listener
     public void onCancel()
     {
         HandlerList.unregisterAll(this);
-        player.getWorld().playSound(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 1, 1);
+        player.getWorld().playSound(player.getLocation(), Sound.BLOCK_GLASS_BREAK, 1, 1);
         player.getWorld().spawnParticle(Particle.REDSTONE, player.getLocation().clone().add(0, 1, 0), 75, 0.4, 0.4, 0.4, new Particle.DustOptions(Color.GREEN, 1f));
     }
 }

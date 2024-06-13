@@ -82,12 +82,17 @@ public class PowerOrbit extends BaseOrbit
 
         //Bukkit.getLogger().info(item.getItemMeta().getDisplayName());
 
-        if(checkItem(item))// && checkCooldown(player, cooldown1Key, cooldown1Max))
+        if(checkItem(item) && checkCooldown(player, cooldown1Key, cooldown1Max))
         {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 200, 2));
-            Orbit.tasks.add(new PowerOrbit_Cookout(plugin, player.getLocation(), player));
+            activateAbility1(player, plugin);
 
             event.setCancelled(true);
         }
+    }
+
+    public static void activateAbility1(Player _player, Orbit _plugin)
+    {
+        _player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 200, 2));
+        Orbit.tasks.add(new PowerOrbit_Cookout(_plugin, _player.getLocation(), _player));
     }
 }

@@ -88,9 +88,14 @@ public class AstroOrbit extends BaseOrbit
         
         ItemStack item = event.getItem();
 
-        if(checkItem(item))// && checkCooldown(player, cooldown1Key, cooldown1Max))
+        if(checkItem(item) && checkCooldown(player, cooldown1Key, cooldown1Max))
         {
-            Orbit.tasks.add(new AstroOrbit_Evaporation(plugin, player));
+            activateAbility1(player, plugin);
         }
+    }
+
+    public static void activateAbility1(Player _player, Orbit _plugin)
+    {
+        Orbit.tasks.add(new AstroOrbit_Evaporation(_plugin, _player));
     }
 }

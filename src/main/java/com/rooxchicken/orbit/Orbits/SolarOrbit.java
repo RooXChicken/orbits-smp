@@ -157,9 +157,9 @@ public class SolarOrbit extends BaseOrbit
 
         //Bukkit.getLogger().info(item.getItemMeta().getDisplayName());
 
-        if(checkItem(item))// && checkCooldown(player, cooldown1Key, cooldown1Max))
+        if(checkItem(item) && checkCooldown(player, cooldown2Key, cooldown2Max))
         {
-            Orbit.tasks.add(new SolarOrbit_Rings(plugin, player));
+            activateAbility2(player, plugin);
 
             event.setCancelled(true);
         }
@@ -175,5 +175,10 @@ public class SolarOrbit extends BaseOrbit
         {
             event.setCancelled(true);
         }
+    }
+
+    public static void activateAbility2(Player _player, Orbit _plugin)
+    {
+        Orbit.tasks.add(new SolarOrbit_Rings(_plugin, _player));
     }
 }

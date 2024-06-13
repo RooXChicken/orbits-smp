@@ -95,9 +95,9 @@ public class VoidOrbit extends BaseOrbit
 
         ItemStack item = event.getItem();
 
-        if(checkItem(item))// && checkCooldown(player, cooldown1Key, cooldown1Max))
+        if(checkItem(item) && checkCooldown(player, cooldown1Key, cooldown1Max))
         {
-            Orbit.tasks.add(new VoidOrbit_Freeze(plugin, player));
+            activateAbility1(player, plugin);
         }
     }
 
@@ -117,11 +117,21 @@ public class VoidOrbit extends BaseOrbit
 
         //Bukkit.getLogger().info(item.getItemMeta().getDisplayName());
 
-        if(checkItem(item))// && checkCooldown(player, cooldown1Key, cooldown1Max))
+        if(checkItem(item) && checkCooldown(player, cooldown2Key, cooldown2Max))
         {
-            Orbit.tasks.add(new VoidOrbit_Storm(plugin, player));
+            activateAbility2(player, plugin);
 
             event.setCancelled(true);
         }
+    }
+
+    public static void activateAbility1(Player _player, Orbit _plugin)
+    {
+        Orbit.tasks.add(new VoidOrbit_Freeze(_plugin, _player));
+    }
+
+    public static void activateAbility2(Player _player, Orbit _plugin)
+    {
+        Orbit.tasks.add(new VoidOrbit_Storm(_plugin, _player));
     }
 }
