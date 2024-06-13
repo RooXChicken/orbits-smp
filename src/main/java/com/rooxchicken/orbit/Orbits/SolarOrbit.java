@@ -52,11 +52,11 @@ public class SolarOrbit extends BaseOrbit
     private Orbit plugin;
     private Player player;
 
-    public NamespacedKey cooldown1Key;
-    public NamespacedKey cooldown2Key;
+    //public NamespacedKey cooldown1Key;
+    //public NamespacedKey cooldown2Key;
 
-    public int cooldown1Max = 200 * 20;
-    public int cooldown2Max = 250 * 20;
+    // public int cooldown1Max;
+    // public int cooldown2Max;
 
     private int state = 0;
 
@@ -73,8 +73,13 @@ public class SolarOrbit extends BaseOrbit
         meta.setDisplayName(itemName);
         item.setItemMeta(meta);
 
+        cooldown1Max = 300*20;
+        cooldown2Max = 350*20;
+
         cooldown1Key = new NamespacedKey(plugin, "solar_cd1");
         cooldown2Key = new NamespacedKey(plugin, "solar_cd2");
+
+        checkHasCooldown(player, cooldown1Key, cooldown2Key);
     }
 
     @Override
@@ -120,12 +125,15 @@ public class SolarOrbit extends BaseOrbit
                 break;
 
                 case 1:
-                    Fireball fireball = (Fireball)player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREBALL);
-                    double yaw = Math.toRadians(player.getLocation().getYaw() + 90);
-                    //fireball.setVelocity(new Vector(Math.cos(yaw), Math.sin(player.getLocation().getPitch()), Math.sin(yaw)));
-                    fireball.setRotation(player.getLocation().getYaw(), player.getLocation().getPitch());
-                    fireball.teleport(fireball.getLocation().clone().add(new Vector(Math.cos(yaw), Math.sin(Math.toRadians(player.getLocation().getPitch()))*-1, Math.sin(yaw)).multiply(2)));
-                    fireball.setYield(3);
+                    if(checkCooldown(player, cooldown1Key, cooldown1Max))
+                    {
+                        Fireball fireball = (Fireball)player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREBALL);
+                        double yaw = Math.toRadians(player.getLocation().getYaw() + 90);
+                        //fireball.setVelocity(new Vector(Math.cos(yaw), Math.sin(player.getLocation().getPitch()), Math.sin(yaw)));
+                        fireball.setRotation(player.getLocation().getYaw(), player.getLocation().getPitch());
+                        fireball.teleport(fireball.getLocation().clone().add(new Vector(Math.cos(yaw), Math.sin(Math.toRadians(player.getLocation().getPitch()))*-1, Math.sin(yaw)).multiply(2)));
+                        fireball.setYield(3);
+                    }
                     state = 2;
                 break;
             }

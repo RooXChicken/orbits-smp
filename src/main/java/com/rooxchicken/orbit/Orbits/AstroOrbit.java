@@ -45,11 +45,11 @@ public class AstroOrbit extends BaseOrbit
     private Orbit plugin;
     private Player player;
 
-    public NamespacedKey cooldown1Key;
-    public NamespacedKey cooldown2Key;
+    //public NamespacedKey cooldown1Key;
+    //public NamespacedKey cooldown2Key;
 
-    public int cooldown1Max = 200 * 20;
-    public int cooldown2Max = 250 * 20;
+    // public int cooldown1Max = 200 * 20;
+    // public int cooldown2Max = 250 * 20;
     
     
     public AstroOrbit(Orbit _plugin, Player _player)
@@ -65,8 +65,13 @@ public class AstroOrbit extends BaseOrbit
         meta.setDisplayName(itemName);
         item.setItemMeta(meta);
 
+        cooldown1Max = 200 * 20;
+        cooldown2Max = 250 * 20;
+
         cooldown1Key = new NamespacedKey(plugin, "astro_cd1");
         cooldown2Key = new NamespacedKey(plugin, "astro_cd2");
+
+        checkHasCooldown(player, cooldown1Key, cooldown2Key);
     }
 
     @EventHandler

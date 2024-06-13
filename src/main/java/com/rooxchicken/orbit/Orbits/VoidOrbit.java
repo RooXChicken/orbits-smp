@@ -46,12 +46,11 @@ public class VoidOrbit extends BaseOrbit
     private Orbit plugin;
     private Player player;
 
-    public NamespacedKey cooldown1Key;
-    public NamespacedKey cooldown2Key;
+    //public NamespacedKey cooldown1Key;
+    //public NamespacedKey cooldown2Key;
 
-    public int cooldown1Max = 200 * 20;
-    public int cooldown2Max = 250 * 20;
-    
+    // public int cooldown1Max;
+    // public int cooldown2Max;
 
     public VoidOrbit(Orbit _plugin, Player _player)
     {
@@ -66,8 +65,13 @@ public class VoidOrbit extends BaseOrbit
         meta.setDisplayName(itemName);
         item.setItemMeta(meta);
 
+        cooldown1Max = 300 * 20;
+        cooldown2Max = 500 * 20;
+
         cooldown1Key = new NamespacedKey(plugin, "void_cd1");
         cooldown2Key = new NamespacedKey(plugin, "void_cd2");
+
+        checkHasCooldown(player, cooldown1Key, cooldown2Key);
     }
 
     @Override

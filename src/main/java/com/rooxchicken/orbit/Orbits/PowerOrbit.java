@@ -24,9 +24,11 @@ public class PowerOrbit extends BaseOrbit
     private Orbit plugin;
     private Player player;
 
-    public NamespacedKey cooldown1Key;
-    public int cooldown1Max = 500 * 20;
-    public int cooldown2Max = -1;
+    //public NamespacedKey cooldown1Key;
+
+    //public int cooldown1Max = 500*20;
+    //public int cooldown2Max = -1;
+
     //public NamespacedKey cooldown2Key;
 
     public PowerOrbit(Orbit _plugin, Player _player)
@@ -41,9 +43,14 @@ public class PowerOrbit extends BaseOrbit
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(itemName);
         item.setItemMeta(meta);
+        
+        cooldown1Max = 500*20;
+        cooldown2Max = -1;
 
         cooldown1Key = new NamespacedKey(plugin, "power_cd1");
         //cooldown2Key = new NamespacedKey(plugin, "power_cd2");
+
+        checkHasCooldown(player, cooldown1Key, cooldown2Key);
     }
 
     @Override

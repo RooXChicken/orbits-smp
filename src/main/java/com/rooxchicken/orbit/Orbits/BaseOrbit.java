@@ -16,6 +16,11 @@ public abstract class BaseOrbit implements Listener
     public String itemName;
     public ItemStack item;
 
+    public NamespacedKey cooldown1Key;
+    public NamespacedKey cooldown2Key;
+    public int cooldown1Max;
+    public int cooldown2Max;
+
     public BaseOrbit(Orbit _plugin)
     {
         plugin = _plugin;
@@ -47,5 +52,16 @@ public abstract class BaseOrbit implements Listener
     public boolean checkOrbit(Player player, int orbit)
     {
         return (player.getPersistentDataContainer().get(Orbit.orbitKey, PersistentDataType.INTEGER) == orbit);
+    }
+
+    public void checkHasCooldown(Player player, NamespacedKey cd1, NamespacedKey cd2)
+    {
+        PersistentDataContainer data = player.getPersistentDataContainer();
+        if(!data.has(cd1, PersistentDataType.INTEGER))
+            data.set(cd1, PersistentDataType.INTEGER, 0);
+
+        if(cd2 != null)
+        if(!data.has(cd2, PersistentDataType.INTEGER))
+            data.set(cd2, PersistentDataType.INTEGER, 0);
     }
 }
