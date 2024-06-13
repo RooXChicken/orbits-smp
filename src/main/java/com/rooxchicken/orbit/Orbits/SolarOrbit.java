@@ -44,23 +44,25 @@ import net.minecraft.world.level.IMaterial;
 
 public class SolarOrbit extends BaseOrbit
 {
+    private Orbit plugin;
+    private Player player;
+
     public NamespacedKey cooldown1Key;
     public NamespacedKey cooldown2Key;
 
     public int cooldown1Max = 200 * 20;
     public int cooldown2Max = 250 * 20;
-    
-    private Orbit plugin;
 
-    public SolarOrbit(Orbit _plugin)
+    public SolarOrbit(Orbit _plugin, Player _player)
     {
         super(_plugin);
         plugin = _plugin;
+        player = _player;
 
         itemName = "§e§lSolar Orbit";
 
-        cooldown1Key = new NamespacedKey(plugin, "void_cd1");
-        cooldown2Key = new NamespacedKey(plugin, "void_cd2");
+        cooldown1Key = new NamespacedKey(plugin, "solar_cd1");
+        cooldown2Key = new NamespacedKey(plugin, "solar_cd2");
     }
 
     @Override
@@ -75,7 +77,9 @@ public class SolarOrbit extends BaseOrbit
         if(event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK)
             return;
 
-        Player player = event.getPlayer();
+        if(player != event.getPlayer())
+            return;
+
         ItemStack item = event.getItem();
 
         if(checkItem(item))// && checkCooldown(player, cooldown1Key, cooldown1Max))
@@ -89,7 +93,9 @@ public class SolarOrbit extends BaseOrbit
     @EventHandler
     private void spawnSaturnRings(PlayerSwapHandItemsEvent event)
     {
-        Player player = event.getPlayer();
+        if(player != event.getPlayer())
+            return;
+
         ItemStack item = event.getMainHandItem();
 
         if(!player.isSneaking())

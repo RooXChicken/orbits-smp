@@ -41,18 +41,21 @@ import net.minecraft.world.level.IMaterial;
 
 public class AstroOrbit extends BaseOrbit
 {
+    private Orbit plugin;
+    private Player player;
+
     public NamespacedKey cooldown1Key;
     public NamespacedKey cooldown2Key;
 
     public int cooldown1Max = 200 * 20;
     public int cooldown2Max = 250 * 20;
     
-    private Orbit plugin;
-
-    public AstroOrbit(Orbit _plugin)
+    
+    public AstroOrbit(Orbit _plugin, Player _player)
     {
         super(_plugin);
         plugin = _plugin;
+        player = _player;
 
         itemName = "§7§lAstro Orbit";
 
@@ -60,32 +63,15 @@ public class AstroOrbit extends BaseOrbit
         cooldown2Key = new NamespacedKey(plugin, "astro_cd2");
     }
 
-    @Override
-    public void tick()
-    {
-
-    }
-
-    // @Override
-    // public void tick()
-    // {
-    //     for(Player player : Bukkit.getOnlinePlayers())
-    //     {
-    //         ItemStack item = player.getInventory().getItemInOffHand();
-    //         if(checkItem(item))
-    //         {
-    //             player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 21, 0));
-    //         }
-    //     }
-    // }
-
     @EventHandler
     private void useTrueInvisibility(PlayerInteractEvent event)
     {
         if(event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK)
             return;
 
-        Player player = event.getPlayer();
+        if(player != event.getPlayer())
+            return;
+        
         ItemStack item = event.getItem();
 
         if(checkItem(item))// && checkCooldown(player, cooldown1Key, cooldown1Max))

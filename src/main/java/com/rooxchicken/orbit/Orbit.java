@@ -1,6 +1,7 @@
 package com.rooxchicken.orbit;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -44,10 +45,12 @@ import com.rooxchicken.orbit.Tasks.Task;
 
 public class Orbit extends JavaPlugin implements Listener
 {
+    public static NamespacedKey orbitKey;
+
     public static ArrayList<Task> tasks;
     private List<String> blockedCommands = new ArrayList<>();
 
-    private ArrayList<BaseOrbit> orbits;
+    private HashMap<Player, BaseOrbit> playerOrbitMap;
 
     @Override
     public void onEnable()
@@ -55,11 +58,9 @@ public class Orbit extends JavaPlugin implements Listener
         ProtocolLibrary.getProtocolManager().removePacketListeners(this);
         tasks = new ArrayList<Task>();
 
-        orbits = new ArrayList<BaseOrbit>();
-        orbits.add(new PowerOrbit(this));
-        orbits.add(new AstroOrbit(this));
-        orbits.add(new SolarOrbit(this));
-        orbits.add(new VoidOrbit(this));
+        orbitKey = new NamespacedKey(this, "orbit");
+        
+        playerOrbitMap = new HashMap<Player, BaseOrbit>();
         
         getServer().getPluginManager().registerEvents(this, this);
         
@@ -69,14 +70,14 @@ public class Orbit extends JavaPlugin implements Listener
         {
             public void run()
             {
+                for(BaseOrbit orbit : playerOrbitMap.values())
+                    orbit.tick();
+                
                 ArrayList<Task> _tasks = new ArrayList<Task>();
                 for(Task t : tasks)
                     _tasks.add(t);
                 
                 ArrayList<Task> toRemove = new ArrayList<Task>();
-
-                for(BaseOrbit orbit : orbits)
-                    orbit.tick();
 
                 for(Task t : _tasks)
                 {
@@ -94,7 +95,40 @@ public class Orbit extends JavaPlugin implements Listener
             }
         }, 0, 1);
 
+        for(Player player : Bukkit.getOnlinePlayers())
+            addToList(player);
+
         getLogger().info("Orbiting since 1987 (made by roo)");
+    }
+
+    @EventHandler
+    public void addPlayerOrbit(PlayerJoinEvent event)
+    {
+        addToList(event.getPlayer());
+    }
+
+    private void addToList(Player player)
+    {
+        PersistentDataContainer data = player.getPersistentDataContainer();
+        if(!data.has(orbitKey, PersistentDataType.INTEGER))
+            data.set(orbitKey, PersistentDataType.INTEGER, (int)(Math.random()*5));
+        
+        if(!playerOrbitMap.containsKey(player))
+            playerOrbitMap.put(player, getOrbit(player, data.get(orbitKey, PersistentDataType.INTEGER)));
+    }
+
+    private BaseOrbit getOrbit(Player player, int orbit)
+    {
+        switch(orbit)
+        {
+            case 0: return new PowerOrbit(this, player);
+            case 1: return new AstroOrbit(this, player);
+            case 2: return new VoidOrbit(this, player);
+            case 3: return new SolarOrbit(this, player);
+            //case 4: return new (this);
+        }
+
+        return null;
     }
 
     @EventHandler

@@ -19,15 +19,18 @@ import com.rooxchicken.orbit.Tasks.PowerOrbit_Cookout;
 
 public class PowerOrbit extends BaseOrbit
 {
+    private Orbit plugin;
+    private Player player;
+
     public NamespacedKey cooldown1Key;
     public int cooldown1Max = 500 * 20;
     //public NamespacedKey cooldown2Key;
-    private Orbit plugin;
 
-    public PowerOrbit(Orbit _plugin)
+    public PowerOrbit(Orbit _plugin, Player _player)
     {
         super(_plugin);
         plugin = _plugin;
+        player = _player;
 
         itemName = "§c§lPower Orbit";
 
@@ -38,20 +41,19 @@ public class PowerOrbit extends BaseOrbit
     @Override
     public void tick()
     {
-        for(Player player : Bukkit.getOnlinePlayers())
+        ItemStack item = player.getInventory().getItemInOffHand();
+        if(checkItem(item))
         {
-            ItemStack item = player.getInventory().getItemInOffHand();
-            if(checkItem(item))
-            {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 21, 0));
-            }
+            player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 21, 0));
         }
     }
 
     @EventHandler
     private void useOrbit(PlayerSwapHandItemsEvent event)
     {
-        Player player = event.getPlayer();
+        if(event.getPlayer() != player)
+            return;
+        
         ItemStack item = event.getMainHandItem();
 
         if(!player.isSneaking())
