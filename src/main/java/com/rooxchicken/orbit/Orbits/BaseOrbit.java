@@ -49,6 +49,15 @@ public abstract class BaseOrbit implements Listener
         return false;
     }
 
+    public boolean checkCooldownNoset(Player player, NamespacedKey key, int cooldown)
+    {
+        PersistentDataContainer data = player.getPersistentDataContainer();
+        if(!data.has(key, PersistentDataType.INTEGER))
+            data.set(key, PersistentDataType.INTEGER, 0);
+
+        return (data.get(key, PersistentDataType.INTEGER) == 0);
+    }
+
     public boolean checkOrbit(Player player, int orbit)
     {
         return (player.getPersistentDataContainer().get(Orbit.orbitKey, PersistentDataType.INTEGER) == orbit);

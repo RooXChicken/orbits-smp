@@ -35,6 +35,7 @@ import org.bukkit.util.RayTraceResult;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.google.common.base.Predicate;
+import com.rooxchicken.orbit.Commands.ResetCooldown;
 import com.rooxchicken.orbit.Commands.SetOrbit;
 import com.rooxchicken.orbit.Orbits.AstroOrbit;
 import com.rooxchicken.orbit.Orbits.BaseOrbit;
@@ -67,6 +68,7 @@ public class Orbit extends JavaPlugin implements Listener
         
         getServer().getPluginManager().registerEvents(this, this);
         this.getCommand("setorbit").setExecutor(new SetOrbit(this));
+        this.getCommand("resetcooldown").setExecutor(new ResetCooldown(this));
 
         getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable()
         {

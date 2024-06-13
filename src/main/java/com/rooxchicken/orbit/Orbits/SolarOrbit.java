@@ -44,6 +44,7 @@ import com.rooxchicken.orbit.Tasks.VoidOrbit_Freeze;
 
 import net.minecraft.network.protocol.game.PacketPlayOutEntityEquipment;
 import net.minecraft.world.entity.EnumItemSlot;
+import net.minecraft.world.entity.animal.EntityBee.f;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.level.IMaterial;
 
@@ -85,10 +86,15 @@ public class SolarOrbit extends BaseOrbit
     @Override
     public void tick()
     {
-        if(state != 0 && player.isOnGround())
+        if(!checkCooldownNoset(player, cooldown1Key, cooldown1Max) && player.getPersistentDataContainer().get(cooldown1Key, PersistentDataType.INTEGER) < cooldown1Max-1)
+        {
+            if(player.isOnGround())
+                state = 3;
+        }
+        else
             state = 0;
 
-        //Bukkit.getLogger().info("" + player.getVelocity().getY());
+        //Bukkit.getLogger().info("" + state);
     }
 
     @EventHandler
@@ -125,15 +131,12 @@ public class SolarOrbit extends BaseOrbit
                 break;
 
                 case 1:
-                    if(checkCooldown(player, cooldown1Key, cooldown1Max))
-                    {
-                        Fireball fireball = (Fireball)player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREBALL);
-                        double yaw = Math.toRadians(player.getLocation().getYaw() + 90);
-                        //fireball.setVelocity(new Vector(Math.cos(yaw), Math.sin(player.getLocation().getPitch()), Math.sin(yaw)));
-                        fireball.setRotation(player.getLocation().getYaw(), player.getLocation().getPitch());
-                        fireball.teleport(fireball.getLocation().clone().add(new Vector(Math.cos(yaw), Math.sin(Math.toRadians(player.getLocation().getPitch()))*-1, Math.sin(yaw)).multiply(2)));
-                        fireball.setYield(3);
-                    }
+                    Fireball fireball = (Fireball)player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREBALL);
+                    double yaw = Math.toRadians(player.getLocation().getYaw() + 90);
+                    //fireball.setVelocity(new Vector(Math.cos(yaw), Math.sin(player.getLocation().getPitch()), Math.sin(yaw)));
+                    fireball.setRotation(player.getLocation().getYaw(), player.getLocation().getPitch());
+                    fireball.teleport(fireball.getLocation().clone().add(new Vector(Math.cos(yaw), Math.sin(Math.toRadians(player.getLocation().getPitch()))*-1, Math.sin(yaw)).multiply(2)));
+                    fireball.setYield(3);
                     state = 2;
                 break;
             }
@@ -170,7 +173,7 @@ public class SolarOrbit extends BaseOrbit
         if(event.getCause() != DamageCause.FALL || event.getEntityType() != EntityType.PLAYER)
             return;
 
-        if(state != 0)
+        if(state != 0 && state != 3)
         {
             event.setCancelled(true);
         }
