@@ -12,10 +12,13 @@ import com.rooxchicken.orbit.Orbit;
 
 public abstract class BaseOrbit implements Listener
 {
+    private Orbit plugin;
     public String itemName;
+    public ItemStack item;
 
     public BaseOrbit(Orbit _plugin)
     {
+        plugin = _plugin;
         Bukkit.getServer().getPluginManager().registerEvents(this, _plugin);
     }
 
@@ -39,5 +42,10 @@ public abstract class BaseOrbit implements Listener
         }
 
         return false;
+    }
+
+    public boolean checkOrbit(Player player, int orbit)
+    {
+        return (player.getPersistentDataContainer().get(Orbit.orbitKey, PersistentDataType.INTEGER) == orbit);
     }
 }

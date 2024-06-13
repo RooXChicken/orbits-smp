@@ -41,6 +41,8 @@ import com.rooxchicken.orbit.Orbits.BaseOrbit;
 import com.rooxchicken.orbit.Orbits.PowerOrbit;
 import com.rooxchicken.orbit.Orbits.SolarOrbit;
 import com.rooxchicken.orbit.Orbits.VoidOrbit;
+import com.rooxchicken.orbit.Tasks.CheckForOrbit;
+import com.rooxchicken.orbit.Tasks.DisplayCooldown;
 import com.rooxchicken.orbit.Tasks.Task;
 
 public class Orbit extends JavaPlugin implements Listener
@@ -56,15 +58,15 @@ public class Orbit extends JavaPlugin implements Listener
     public void onEnable()
     {
         ProtocolLibrary.getProtocolManager().removePacketListeners(this);
-        tasks = new ArrayList<Task>();
-
         orbitKey = new NamespacedKey(this, "orbit");
+        tasks = new ArrayList<Task>();
+        tasks.add(new DisplayCooldown(this));
+        tasks.add(new CheckForOrbit(this));
         
         playerOrbitMap = new HashMap<Player, BaseOrbit>();
         
         getServer().getPluginManager().registerEvents(this, this);
-        
-        this.getCommand("giveitems").setExecutor(new SetOrbit(this));
+        this.getCommand("setorbit").setExecutor(new SetOrbit(this));
 
         getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable()
         {
@@ -114,7 +116,14 @@ public class Orbit extends JavaPlugin implements Listener
             data.set(orbitKey, PersistentDataType.INTEGER, (int)(Math.random()*5));
         
         if(!playerOrbitMap.containsKey(player))
+        {
             playerOrbitMap.put(player, getOrbit(player, data.get(orbitKey, PersistentDataType.INTEGER)));
+        }
+    }
+
+    public BaseOrbit getOrbit(Player player)
+    {
+        return playerOrbitMap.get(player);
     }
 
     private BaseOrbit getOrbit(Player player, int orbit)

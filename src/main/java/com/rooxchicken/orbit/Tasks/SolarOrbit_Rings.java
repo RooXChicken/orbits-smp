@@ -46,6 +46,8 @@ public class SolarOrbit_Rings extends Task
             cacheX[i] = Math.sin(rad);
             cacheZ[i] = Math.cos(rad);
         }
+
+        player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 100, 1));
     }
 
     @Override

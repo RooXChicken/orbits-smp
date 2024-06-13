@@ -16,6 +16,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
@@ -58,7 +59,12 @@ public class VoidOrbit extends BaseOrbit
         plugin = _plugin;
         player = _player;
 
-        itemName = "§7§lAstro Orbit";
+        itemName = "§0§lVoid Orbit";
+
+        item = new ItemStack(Material.BLACK_DYE);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(itemName);
+        item.setItemMeta(meta);
 
         cooldown1Key = new NamespacedKey(plugin, "void_cd1");
         cooldown2Key = new NamespacedKey(plugin, "void_cd2");
@@ -79,6 +85,9 @@ public class VoidOrbit extends BaseOrbit
         if(player != event.getPlayer())
             return;
 
+        if(!checkOrbit(player, 2))
+            return;
+
         ItemStack item = event.getItem();
 
         if(checkItem(item))// && checkCooldown(player, cooldown1Key, cooldown1Max))
@@ -91,6 +100,9 @@ public class VoidOrbit extends BaseOrbit
     private void useVoidStorm(PlayerSwapHandItemsEvent event)
     {
         if(event.getPlayer() != player)
+            return;
+
+        if(!checkOrbit(player, 2))
             return;
             
         ItemStack item = event.getMainHandItem();

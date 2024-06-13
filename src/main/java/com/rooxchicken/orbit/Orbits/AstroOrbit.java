@@ -16,6 +16,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
@@ -59,6 +60,11 @@ public class AstroOrbit extends BaseOrbit
 
         itemName = "§7§lAstro Orbit";
 
+        item = new ItemStack(Material.GRAY_DYE);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(itemName);
+        item.setItemMeta(meta);
+
         cooldown1Key = new NamespacedKey(plugin, "astro_cd1");
         cooldown2Key = new NamespacedKey(plugin, "astro_cd2");
     }
@@ -70,6 +76,9 @@ public class AstroOrbit extends BaseOrbit
             return;
 
         if(player != event.getPlayer())
+            return;
+
+        if(!checkOrbit(player, 2))
             return;
         
         ItemStack item = event.getItem();

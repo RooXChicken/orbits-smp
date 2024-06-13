@@ -1,6 +1,7 @@
 package com.rooxchicken.orbit.Orbits;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,6 +10,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
@@ -33,6 +35,11 @@ public class PowerOrbit extends BaseOrbit
         player = _player;
 
         itemName = "§c§lPower Orbit";
+        
+        item = new ItemStack(Material.RED_DYE);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(itemName);
+        item.setItemMeta(meta);
 
         cooldown1Key = new NamespacedKey(plugin, "power_cd1");
         //cooldown2Key = new NamespacedKey(plugin, "power_cd2");
@@ -41,6 +48,9 @@ public class PowerOrbit extends BaseOrbit
     @Override
     public void tick()
     {
+        if(!checkOrbit(player, 0))
+            return;
+            
         ItemStack item = player.getInventory().getItemInOffHand();
         if(checkItem(item))
         {
@@ -52,6 +62,9 @@ public class PowerOrbit extends BaseOrbit
     private void useOrbit(PlayerSwapHandItemsEvent event)
     {
         if(event.getPlayer() != player)
+            return;
+
+        if(!checkOrbit(player, 0))
             return;
         
         ItemStack item = event.getMainHandItem();
