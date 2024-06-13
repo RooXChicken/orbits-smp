@@ -11,11 +11,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.rooxchicken.orbit.Orbit;
 
-public class GiveItems implements CommandExecutor
+public class SetOrbit implements CommandExecutor
 {
     private Orbit plugin;
 
-    public GiveItems(Orbit _plugin)
+    public SetOrbit(Orbit _plugin)
     {
         plugin = _plugin;
     }
@@ -26,9 +26,7 @@ public class GiveItems implements CommandExecutor
         if(sender.isOp())
         {
             Player player = Bukkit.getPlayer(sender.getName());
-            Bukkit.dispatchCommand(sender, "give @s red_dye{display:{Name:'{\"text\":\"Power Orbit\",\"color\":\"red\",\"bold\":true}'}} 1");
-            Bukkit.dispatchCommand(sender, "give @s gray_dye{display:{Name:'{\"text\":\"Astro Orbit\",\"color\":\"gray\",\"bold\":true}'}} 1");
-            Bukkit.dispatchCommand(sender, "give @s yellow_dye{display:{Name:'{\"text\":\"Solar Orbit\",\"color\":\"yellow\",\"bold\":true}'}} 1");
+            plugin.setOrbit(player, Integer.parseInt(args[0]));
         }
 
         return true;

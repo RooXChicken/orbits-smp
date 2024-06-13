@@ -4,8 +4,8 @@ version: 0.1
 api-version: '1.20'
 
 commands:
-   giveitems:
-      description: Gives the items
-      usage: /giveitems
+   setorbit:
+      description: Sets the user's orbit to the specified number
+      usage: /setorbit <orbit>
 
 depend: [ ProtocolLib ]

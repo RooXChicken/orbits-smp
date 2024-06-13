@@ -35,7 +35,7 @@ import org.bukkit.util.RayTraceResult;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.google.common.base.Predicate;
-import com.rooxchicken.orbit.Commands.GiveItems;
+import com.rooxchicken.orbit.Commands.SetOrbit;
 import com.rooxchicken.orbit.Orbits.AstroOrbit;
 import com.rooxchicken.orbit.Orbits.BaseOrbit;
 import com.rooxchicken.orbit.Orbits.PowerOrbit;
@@ -64,7 +64,7 @@ public class Orbit extends JavaPlugin implements Listener
         
         getServer().getPluginManager().registerEvents(this, this);
         
-        this.getCommand("giveitems").setExecutor(new GiveItems(this));
+        this.getCommand("giveitems").setExecutor(new SetOrbit(this));
 
         getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable()
         {
@@ -129,6 +129,13 @@ public class Orbit extends JavaPlugin implements Listener
         }
 
         return null;
+    }
+
+    public void setOrbit(Player player, int orbit)
+    {
+        playerOrbitMap.remove(player);
+        player.getPersistentDataContainer().set(orbitKey, PersistentDataType.INTEGER, orbit);
+        addToList(player);
     }
 
     @EventHandler
