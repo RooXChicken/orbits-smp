@@ -23,6 +23,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerCommandSendEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
@@ -47,6 +48,8 @@ import com.rooxchicken.orbit.Orbits.VoidOrbit;
 import com.rooxchicken.orbit.Tasks.CheckForOrbit;
 import com.rooxchicken.orbit.Tasks.DisplayCooldown;
 import com.rooxchicken.orbit.Tasks.Task;
+
+import net.minecraft.world.entity.animal.EntityTropicalFish.Base;
 
 public class Orbit extends JavaPlugin implements Listener
 {
@@ -163,13 +166,22 @@ public class Orbit extends JavaPlugin implements Listener
     }
 
     @EventHandler
-    public void addToKills(EntityDeathEvent event)
+    public void addToKills(PlayerDeathEvent event)
     {
-        Entity killer = event.getEntity().getLastDamageCause().getEntity();
-        if(killer != null && killer instanceof Player && event.getEntity() instanceof Player)
-            ((Player)killer).getPersistentDataContainer().set(killsKey, PersistentDataType.INTEGER, ((Player)killer).getPersistentDataContainer().get(killsKey, PersistentDataType.INTEGER) + 1);
+        Entity killer = event.getEntity().getKiller();
+        if(killer != null)
+            killer.getPersistentDataContainer().set(killsKey, PersistentDataType.INTEGER, killer.getPersistentDataContainer().get(killsKey, PersistentDataType.INTEGER) + 1);
 
-        event.getDrops().remove(getOrbit((Player)event.getEntity()).item);
+        event.getDrops().remove(getOrbit(event.getEntity()).item);
+        //Bukkit.getLogger().info(killer.getName() + killer.getPersistentDataContainer().get(killsKey, PersistentDataType.INTEGER));
+    }
+
+    @EventHandler
+    public void preventDropping(PlayerDropItemEvent event)
+    {
+        BaseOrbit orbit = getOrbit(event.getPlayer());
+        if(event.getItemDrop().getItemStack().equals(orbit.item))
+            event.setCancelled(true);
     }
 
     @EventHandler

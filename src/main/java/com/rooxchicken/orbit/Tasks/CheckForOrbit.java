@@ -23,7 +23,7 @@ public class CheckForOrbit extends Task
         {
             BaseOrbit orbit = plugin.getOrbit(player);
             if(!player.getInventory().contains(orbit.item))
-                if(!player.getInventory().getItemInOffHand().equals(orbit.item))
+                if(!player.getInventory().getItemInOffHand().equals(orbit.item) && !player.getItemOnCursor().equals(orbit.item))
                     player.getInventory().addItem(orbit.item);
         }
     }
