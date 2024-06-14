@@ -131,7 +131,7 @@ public class MoneyOrbit extends BaseOrbit
     {
         if(!checkKills(player))
             return;
-            
+
         int steal = (int)(Math.random() * 4);
         int ability = (int)(Math.random() * 2);
 
@@ -143,7 +143,7 @@ public class MoneyOrbit extends BaseOrbit
             if(ability == 0)
                 AstroOrbit.activateAbility1(player, plugin);
             if(ability == 1)
-                AstroOrbit.activateAbility1(player, plugin); //make two when done
+                AstroOrbit.activateAbility2(player, plugin);
         }
 
         if(steal == 2)
@@ -151,13 +151,11 @@ public class MoneyOrbit extends BaseOrbit
             if(ability == 0)
                 VoidOrbit.activateAbility1(player, plugin);
             if(ability == 1)
-                VoidOrbit.activateAbility2(player, plugin); //make two when done
+                VoidOrbit.activateAbility2(player, plugin);
         }
 
         if(steal == 3)
-        {
             SolarOrbit.activateAbility2(player, plugin);
-        }
         
     }
 }

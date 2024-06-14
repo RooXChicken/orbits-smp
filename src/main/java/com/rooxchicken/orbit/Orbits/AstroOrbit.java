@@ -109,9 +109,12 @@ public class AstroOrbit extends BaseOrbit
         if(!player.isSneaking())
             return;
 
+        if(!checkKills(player))
+            return;
+
         //Bukkit.getLogger().info(item.getItemMeta().getDisplayName());
 
-        if(checkItem(item))// && checkCooldown(player, cooldown2Key, cooldown2Max))
+        if(checkItem(item) && checkCooldown(player, cooldown2Key, cooldown2Max))
         {
             activateAbility2(player, plugin);
 

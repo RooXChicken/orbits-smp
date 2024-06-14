@@ -41,7 +41,8 @@ public class DisplayCooldown extends Task
             else
                 msg += cooldown1/20 + "/" + orbit.cooldown1Max/20 + "s";
 
-            if(orbit.cooldown2Max != -1)
+            int kills = data.get(Orbit.killsKey, PersistentDataType.INTEGER);
+            if(orbit.cooldown2Max != -1 && kills >= 5)
             {
                 int cooldown2 = data.get(orbit.cooldown2Key, PersistentDataType.INTEGER) - 1;
                 if(cooldown2 >= 0)
@@ -51,6 +52,9 @@ public class DisplayCooldown extends Task
                 else
                     msg += " | " + cooldown2/20 + "/" + orbit.cooldown2Max/20 + "s";
             }
+
+            if(orbit.cooldown2Max != -1 && kills < 5)
+                msg += " | LOCKED";
 
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(msg));
         }

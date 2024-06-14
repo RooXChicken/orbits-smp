@@ -122,7 +122,7 @@ public class Orbit extends JavaPlugin implements Listener
         PersistentDataContainer data = player.getPersistentDataContainer();
         if(!data.has(orbitKey, PersistentDataType.INTEGER))
             data.set(orbitKey, PersistentDataType.INTEGER, (int)(Math.random()*5));
-            
+
         if(!data.has(killsKey, PersistentDataType.INTEGER))
             data.set(killsKey, PersistentDataType.INTEGER, 0);
         
@@ -166,8 +166,10 @@ public class Orbit extends JavaPlugin implements Listener
     public void addToKills(EntityDeathEvent event)
     {
         Entity killer = event.getEntity().getLastDamageCause().getEntity();
-        if(killer != null && killer instanceof Player)
+        if(killer != null && killer instanceof Player && event.getEntity() instanceof Player)
             ((Player)killer).getPersistentDataContainer().set(killsKey, PersistentDataType.INTEGER, ((Player)killer).getPersistentDataContainer().get(killsKey, PersistentDataType.INTEGER) + 1);
+
+        event.getDrops().remove(getOrbit((Player)event.getEntity()).item);
     }
 
     @EventHandler
