@@ -32,6 +32,7 @@ import com.comphenix.protocol.wrappers.EnumWrappers.ItemSlot;
 import com.comphenix.protocol.wrappers.Pair;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher.Registry;
 import com.rooxchicken.orbit.Orbit;
+import com.rooxchicken.orbit.Tasks.AstroOrbit_Dagger;
 import com.rooxchicken.orbit.Tasks.AstroOrbit_Evaporation;
 import com.rooxchicken.orbit.Tasks.PowerOrbit_Cookout;
 
@@ -94,8 +95,37 @@ public class AstroOrbit extends BaseOrbit
         }
     }
 
+    @EventHandler
+    private void useOrbit(PlayerSwapHandItemsEvent event)
+    {
+        if(event.getPlayer() != player)
+            return;
+
+        if(!checkOrbit(player, 1))
+            return;
+        
+        ItemStack item = event.getOffHandItem();
+
+        if(!player.isSneaking())
+            return;
+
+        //Bukkit.getLogger().info(item.getItemMeta().getDisplayName());
+
+        if(checkItem(item))// && checkCooldown(player, cooldown2Key, cooldown2Max))
+        {
+            activateAbility2(player, plugin);
+
+            event.setCancelled(true);
+        }
+    }
+
     public static void activateAbility1(Player _player, Orbit _plugin)
     {
         Orbit.tasks.add(new AstroOrbit_Evaporation(_plugin, _player));
+    }
+
+    public static void activateAbility2(Player _player, Orbit _plugin)
+    {
+        Orbit.tasks.add(new AstroOrbit_Dagger(_plugin, _player));
     }
 }

@@ -73,4 +73,9 @@ public abstract class BaseOrbit implements Listener
         if(!data.has(cd2, PersistentDataType.INTEGER))
             data.set(cd2, PersistentDataType.INTEGER, 0);
     }
+
+    public boolean checkKills(Player player)
+    {
+        return (player.getPersistentDataContainer().get(Orbit.killsKey, PersistentDataType.INTEGER) >= 5);
+    }
 }

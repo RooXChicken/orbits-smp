@@ -150,6 +150,9 @@ public class SolarOrbit extends BaseOrbit
         if(!checkOrbit(player, 3))
             return;
 
+        if(!checkKills(player))
+            return;
+
         ItemStack item = event.getMainHandItem();
 
         if(!player.isSneaking())

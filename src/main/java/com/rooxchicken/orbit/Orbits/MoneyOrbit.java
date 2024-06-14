@@ -129,6 +129,9 @@ public class MoneyOrbit extends BaseOrbit
 
     public void activateAbility2()
     {
+        if(!checkKills(player))
+            return;
+            
         int steal = (int)(Math.random() * 4);
         int ability = (int)(Math.random() * 2);
 

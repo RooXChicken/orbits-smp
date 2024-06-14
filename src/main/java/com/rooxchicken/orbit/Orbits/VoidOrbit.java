@@ -109,6 +109,9 @@ public class VoidOrbit extends BaseOrbit
 
         if(!checkOrbit(player, 2))
             return;
+
+        if(!checkKills(player))
+            return;
             
         ItemStack item = event.getMainHandItem();
 

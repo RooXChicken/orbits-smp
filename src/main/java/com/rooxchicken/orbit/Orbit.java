@@ -18,6 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
@@ -50,6 +51,7 @@ import com.rooxchicken.orbit.Tasks.Task;
 public class Orbit extends JavaPlugin implements Listener
 {
     public static NamespacedKey orbitKey;
+    public static NamespacedKey killsKey;
 
     public static ArrayList<Task> tasks;
     private List<String> blockedCommands = new ArrayList<>();
@@ -60,7 +62,10 @@ public class Orbit extends JavaPlugin implements Listener
     public void onEnable()
     {
         ProtocolLibrary.getProtocolManager().removePacketListeners(this);
+
         orbitKey = new NamespacedKey(this, "orbit");
+        killsKey = new NamespacedKey(this, "kills");
+
         tasks = new ArrayList<Task>();
         tasks.add(new DisplayCooldown(this));
         tasks.add(new CheckForOrbit(this));
@@ -117,6 +122,9 @@ public class Orbit extends JavaPlugin implements Listener
         PersistentDataContainer data = player.getPersistentDataContainer();
         if(!data.has(orbitKey, PersistentDataType.INTEGER))
             data.set(orbitKey, PersistentDataType.INTEGER, (int)(Math.random()*5));
+            
+        if(!data.has(killsKey, PersistentDataType.INTEGER))
+            data.set(killsKey, PersistentDataType.INTEGER, 0);
         
         if(!playerOrbitMap.containsKey(player))
         {
@@ -152,6 +160,14 @@ public class Orbit extends JavaPlugin implements Listener
             player.getPersistentDataContainer().remove(orbitKey);
 
         addToList(player);
+    }
+
+    @EventHandler
+    public void addToKills(EntityDeathEvent event)
+    {
+        Entity killer = event.getEntity().getLastDamageCause().getEntity();
+        if(killer != null && killer instanceof Player)
+            ((Player)killer).getPersistentDataContainer().set(killsKey, PersistentDataType.INTEGER, ((Player)killer).getPersistentDataContainer().get(killsKey, PersistentDataType.INTEGER) + 1);
     }
 
     @EventHandler
