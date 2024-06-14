@@ -40,6 +40,7 @@ public class AstroOrbit_Dagger extends Task
     private ItemDisplay currentDagger;
 
     private int t = 0;
+    private int daggerCount = 3;
 
     public AstroOrbit_Dagger(Orbit _plugin, Player _player)
     {
@@ -55,7 +56,7 @@ public class AstroOrbit_Dagger extends Task
 
         Location spawn = start.clone();
         spawn.setYaw(spawn.getYaw() - 45);
-        spawn.setPitch(start.getPitch() + 90);
+        spawn.setPitch(spawn.getPitch() + 90);
 
         double rad = Math.toRadians(start.getYaw());
         double xOff = Math.cos(rad);
@@ -64,12 +65,7 @@ public class AstroOrbit_Dagger extends Task
         for(int i = 0; i < 3; i++)
         {
             Location dag = spawn.clone();
-            if(i == 0)
-                dag.add(xOff, 0, zOff);
-            if(i == 1)
-                dag.add(-xOff, 0, -zOff);
-            if(i == 2)
-                dag.add(0, 1, 0);
+            moveDag(dag, i, xOff, zOff);
             ItemDisplay dagger = (ItemDisplay)player.getWorld().spawnEntity(dag, EntityType.ITEM_DISPLAY);
             dagger.setItemStack(item);
             daggers.add(dagger);
@@ -83,10 +79,46 @@ public class AstroOrbit_Dagger extends Task
     @Override
     public void run()
     {
+        Location spawn = player.getEyeLocation().clone();
+        spawn.setYaw(spawn.getYaw() - 45);
+        spawn.setPitch(spawn.getPitch() + 90);
+
+        double rad = Math.toRadians(player.getEyeLocation().getYaw());
+        double xOff = Math.cos(rad);
+        double zOff = Math.sin(rad);
+
+        int index = 3-daggerCount;
+
+        for(int i = 0; i < daggerCount; i++)
+        {
+            Location dag = spawn.clone();
+            moveDag(dag, index, xOff, zOff);
+
+            if(daggers.size() > i && daggers.get(i) != currentDagger)
+            {
+                ItemDisplay dagger = daggers.get(i);
+                dagger.teleport(dag);
+                dagger.getWorld().spawnParticle(Particle.REDSTONE, dagger.getLocation(), 2, 0.1, 0.1, 0.1, new Particle.DustOptions(Color.WHITE, 1f));
+            }
+            index++;
+        }
+
+        if(t < 10)
+        {
+            moveDag(spawn, 3-daggerCount, xOff, zOff);
+            currentDagger.teleport(spawn);
+        }
+
         if(++t < 10)
             return;
 
-        currentDagger.teleport(currentDagger.getLocation().add(player.getLocation().getDirection()));
+        if(t == 10)
+        {
+            start = player.getLocation();
+            currentDagger.getWorld().playSound(currentDagger.getLocation(), Sound.BLOCK_BIG_DRIPLEAF_FALL, 1, 1);
+        }
+
+        currentDagger.teleport(currentDagger.getLocation().add(start.getDirection()));
         for(Object o : Orbit.getNearbyEntities(currentDagger.getLocation(), 1))
         {
             if(o instanceof LivingEntity && o != player)
@@ -98,9 +130,7 @@ public class AstroOrbit_Dagger extends Task
         }
 
         if(!currentDagger.getLocation().getBlock().isPassable())
-        {
             killDagger();
-        }
 
         if(t > 200 || currentDagger == null)
         {
@@ -129,5 +159,18 @@ public class AstroOrbit_Dagger extends Task
         currentDagger = daggers.get(0);
 
         t = 0;
+        daggerCount--;
+    }
+
+    private Location moveDag(Location dag, int index, double xOff, double zOff)
+    {
+        if(index == 0)
+            dag.add(xOff, 0, zOff);
+        if(index == 1)
+            dag.add(-xOff, 0, -zOff);
+        if(index == 2)
+            dag.add(0, 1, 0);
+
+        return dag;
     }
 }
