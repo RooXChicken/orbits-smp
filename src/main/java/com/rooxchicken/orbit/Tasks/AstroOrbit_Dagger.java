@@ -123,7 +123,7 @@ public class AstroOrbit_Dagger extends Task
         {
             if(o instanceof LivingEntity && o != player)
             {
-                ((LivingEntity)o).damage(18);
+                ((LivingEntity)o).damage(14);
                 currentDagger.getWorld().playSound(currentDagger.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1, 1);
                 killDagger();
             }

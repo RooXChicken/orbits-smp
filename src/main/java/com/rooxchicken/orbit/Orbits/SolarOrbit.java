@@ -74,7 +74,7 @@ public class SolarOrbit extends BaseOrbit
         meta.setDisplayName(itemName);
         item.setItemMeta(meta);
 
-        cooldown1Max = 300*20;
+        cooldown1Max = 100*20;
         cooldown2Max = 350*20;
 
         cooldown1Key = new NamespacedKey(plugin, "solar_cd1");

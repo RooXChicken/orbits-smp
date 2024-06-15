@@ -11,6 +11,7 @@ import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -47,6 +48,7 @@ import com.rooxchicken.orbit.Orbits.SolarOrbit;
 import com.rooxchicken.orbit.Orbits.VoidOrbit;
 import com.rooxchicken.orbit.Tasks.CheckForOrbit;
 import com.rooxchicken.orbit.Tasks.DisplayCooldown;
+import com.rooxchicken.orbit.Tasks.MoneyOrbit_Cheap;
 import com.rooxchicken.orbit.Tasks.Task;
 
 import net.minecraft.world.entity.animal.EntityTropicalFish.Base;
@@ -56,6 +58,8 @@ public class Orbit extends JavaPlugin implements Listener
     public static NamespacedKey orbitKey;
     public static NamespacedKey killsKey;
 
+    private ShapedRecipe rerollRecipe;
+
     public static ArrayList<Task> tasks;
     private List<String> blockedCommands = new ArrayList<>();
 
@@ -64,6 +68,7 @@ public class Orbit extends JavaPlugin implements Listener
     @Override
     public void onEnable()
     {
+        Bukkit.resetRecipes();
         ProtocolLibrary.getProtocolManager().removePacketListeners(this);
 
         orbitKey = new NamespacedKey(this, "orbit");
@@ -111,6 +116,24 @@ public class Orbit extends JavaPlugin implements Listener
         for(Player player : Bukkit.getOnlinePlayers())
             addToList(player);
 
+        {
+            ItemStack item = new ItemStack(Material.WHITE_DYE);
+    
+            ItemMeta meta = item.getItemMeta();
+            meta.setDisplayName("§f§lReroll Orbit");
+            item.setItemMeta(meta);
+    
+            NamespacedKey key = new NamespacedKey(this, "rerollRecipe");
+            rerollRecipe = new ShapedRecipe(key, item);
+            rerollRecipe.shape("DxD", "xSx", "DxD");
+    
+            rerollRecipe.setIngredient('D', Material.DIAMOND_BLOCK);
+            rerollRecipe.setIngredient('x', Material.NETHERITE_SCRAP);
+            rerollRecipe.setIngredient('S', Material.DIAMOND_SWORD);
+    
+            Bukkit.addRecipe(rerollRecipe);
+            }
+
         getLogger().info("Orbiting since 1987 (made by roo)");
     }
 
@@ -118,6 +141,33 @@ public class Orbit extends JavaPlugin implements Listener
     public void addPlayerOrbit(PlayerJoinEvent event)
     {
         addToList(event.getPlayer());
+    }
+
+    @EventHandler
+    private void useRerollItem(PlayerInteractEvent event)
+    {
+        if(event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK)
+            return;
+        
+        Player player = event.getPlayer();
+        ItemStack item = event.getItem();
+
+        if(item != null && item.hasItemMeta() && item.getItemMeta().getDisplayName().equals("§f§lReroll Orbit"))
+        {
+            player.getInventory().remove(getOrbit(player).item);
+            int oldOrbit = player.getPersistentDataContainer().get(orbitKey, PersistentDataType.INTEGER);
+            int orbit = -1;
+            while(orbit != -1 && orbit != oldOrbit)
+            {
+                orbit = (int)(Math.random()*5);
+            }
+            setOrbit(player, orbit);
+            item.setAmount(item.getAmount() - 1);
+            player.getInventory().addItem(getOrbit(player).item);
+
+            player.getWorld().playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT, 1, 1);
+            player.getWorld().spawnParticle(Particle.REDSTONE, player.getLocation().clone().add(0, 1, 0), 150, 0.4, 0.4, 0.4, new Particle.DustOptions(Color.WHITE, 1f));
+        }
     }
 
     private void addToList(Player player)
@@ -156,11 +206,18 @@ public class Orbit extends JavaPlugin implements Listener
 
     public void setOrbit(Player player, int orbit)
     {
+        PersistentDataContainer data = player.getPersistentDataContainer();
+        BaseOrbit baseOrbit = getOrbit(player);
+
+        data.set(baseOrbit.cooldown1Key, PersistentDataType.INTEGER, 0);
+        if(baseOrbit.cooldown2Max != -1)
+            data.set(baseOrbit.cooldown2Key, PersistentDataType.INTEGER, 0);
+        
         playerOrbitMap.remove(player);
         if(orbit != -1)
-            player.getPersistentDataContainer().set(orbitKey, PersistentDataType.INTEGER, orbit);
+            data.set(orbitKey, PersistentDataType.INTEGER, orbit);
         else
-            player.getPersistentDataContainer().remove(orbitKey);
+            data.remove(orbitKey);
 
         addToList(player);
     }

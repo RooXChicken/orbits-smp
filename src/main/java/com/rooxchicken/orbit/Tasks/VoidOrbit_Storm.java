@@ -69,7 +69,7 @@ public class VoidOrbit_Storm extends Task implements Listener
             for(Object o : Orbit.getNearbyEntities(player.getLocation(), 6))
             {
                 if(o instanceof Player && o != player)
-                    ((Player)o).damage(15, player);
+                    ((Player)o).damage(10, player);
             }
         }
 
